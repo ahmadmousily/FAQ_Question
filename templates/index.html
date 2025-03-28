@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .faq-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .faq-item {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .highlight {
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h2>FAQ Search</h2>
+
+    <form action="/search" method="get">
+        <input type="text" name="query" placeholder="Enter your question..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if question %}
+        <h3>Search Result:</h3>
+        <div class="faq-item highlight">
+            <strong>{{ question }}</strong>
+            <p>{{ answer }}</p>
+        </div>
+    {% endif %}
+
+    <h3>All FAQs:</h3>
+    <div class="faq-container">
+        {% for faq in faqs %}
+            <div class="faq-item">
+                <strong>{{ faq.question }}</strong>
+                <p>{{ faq.answer }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
