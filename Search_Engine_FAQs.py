@@ -12,6 +12,13 @@ model = SentenceTransformer("all-MiniLM-L6-v2")  # Fast & accurate
 def get_embedding(text):
     return model.encode(text).tolist()
 
+client.recreate_collection(
+    collection_name="faq_collection",
+    vectors_config={
+        "size": 384,  # Size of the embeddings produced by the model (all-MiniLM-L6-v2)
+        "distance": "Cosine"  # Cosine similarity
+    }
+)
 faq_data = [
     {"id": 1, "question": "How do I reset my password?", "answer": "Go to settings and click 'Reset Password'."},
     {"id": 2, "question": "What are your support hours?", "answer": "We are available 24/7."},
