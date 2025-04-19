@@ -3,3 +3,4 @@ jinja2
 qdrant-client
 sentence-transformers
 uvicorn
+elasticsearch
