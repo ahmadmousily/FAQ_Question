@@ -61,12 +61,13 @@ def group_by_department(faq_hits):
             "question": source["question"],
             "answer": source["answer"]
         })
+    print("[GROUPED DEPARTMENTS]:", list(grouped.keys())) 
     return dict(grouped)
 
 
 @app.get("/")
 def home(request: Request):
-    response = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=100)
+    response = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=1000)
     grouped_faqs = group_by_department(response["hits"]["hits"])
 
     return templates.TemplateResponse("index.html", {
@@ -98,7 +99,7 @@ def search_faq(request: Request, query: str):
     )
 
 
-    all_faqs = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=100)
+    all_faqs = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=1000)
     grouped_faqs = group_by_department(all_faqs["hits"]["hits"])
 
 
