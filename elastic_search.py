@@ -51,13 +51,22 @@ def insert_sample_data(faq_data):
 
 insert_sample_data(faq_data)
 
-# Home route
+def group_by_department(faq_hits):
+    grouped = defaultdict(list)
+    for hit in faq_hits:
+        source = hit["_source"]
+        grouped[source["department"]].append({
+            "question": source["question"],
+            "answer": source["answer"]
+        })
+    return dict(grouped)
+
+
 @app.get("/")
 def home(request: Request):
     response = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=100)
-    faqs = [{"question": hit["_source"]["question"], "answer": hit["_source"]["answer"]}
-            for hit in response["hits"]["hits"]]
-    
+    grouped_faqs = group_by_department(response["hits"]["hits"])
+
     return templates.TemplateResponse("index.html", {
         "request": request,
         "faqs": faqs,
@@ -86,10 +95,9 @@ def search_faq(request: Request, query: str):
         }
     )
 
-    # Fetch all FAQs to show in sidebar
+
     all_faqs = client.search(index="faq_collection", body={"query": {"match_all": {}}}, size=100)
-    faqs = [{"question": hit["_source"]["question"], "answer": hit["_source"]["answer"]}
-            for hit in all_faqs["hits"]["hits"]]
+    grouped_faqs = group_by_department(all_faqs["hits"]["hits"])
 
     # No matches
     if not response["hits"]["hits"]:
